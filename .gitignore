@@ -1,0 +1,28 @@
+# ── Credenciais Firebase — NUNCA enviar ao GitHub ──────────────────────────
+# Qualquer arquivo com nome serviceAccountKey*.json é bloqueado.
+# Se você nomear diferente, adicione aqui também.
+serviceAccountKey*.json
+*firebase*credentials*.json
+firebase-adminsdk-*.json
+
+# Variáveis de ambiente locais
+.env
+.env.local
+.env.*
+
+# ── Maven ──────────────────────────────────────────────────────────────────
+target/
+*.class
+*.jar
+
+# ── IDEs ───────────────────────────────────────────────────────────────────
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# ── Sistema operacional ───────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
