@@ -9,39 +9,25 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.FileInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
-/**
- * Configura e inicializa o Firebase Admin SDK na inicialização do Spring.
- *
- * As credenciais NUNCA ficam hard-coded aqui — vêm de uma variável de
- * ambiente (FIREBASE_CREDENTIALS_PATH) que aponta para o JSON de serviço.
- * Esse arquivo JSON está no .gitignore e JAMAIS vai para o GitHub.
- */
 @Configuration
 public class FirebaseConfig {
 
-    /**
-     * Lê o valor de FIREBASE_CREDENTIALS_PATH do ambiente (ou do
-     * application.properties que por sua vez lê do ambiente).
-     * Ex: export FIREBASE_CREDENTIALS_PATH=/caminho/serviceAccountKey.json
-     */
-    @Value("${firebase.credentials.path}")
-    private String credentialsPath;
+    @Value("${firebase.credentials.json}")
+    private String credentialsJson;
 
-    /**
-     * Bean do Firestore — injetável em qualquer Service/Repository.
-     * O método só roda uma vez; se o FirebaseApp já foi inicializado
-     * (ex: em testes), reutiliza a instância existente.
-     */
     @Bean
     public Firestore firestore() throws IOException {
         if (FirebaseApp.getApps().isEmpty()) {
-            FileInputStream serviceAccount = new FileInputStream(credentialsPath);
+            ByteArrayInputStream credentialsStream = new ByteArrayInputStream(
+                    credentialsJson.getBytes(StandardCharsets.UTF_8)
+            );
 
             FirebaseOptions options = FirebaseOptions.builder()
-                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .setCredentials(GoogleCredentials.fromStream(credentialsStream))
                     .build();
 
             FirebaseApp.initializeApp(options);
